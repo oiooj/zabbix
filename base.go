@@ -8,6 +8,7 @@ import (
 	"log"
 	"net/http"
 	"sync/atomic"
+	"time"
 )
 
 type (
@@ -73,6 +74,13 @@ func NewAPI(url string) (api *API) {
 // Allows one to use specific http.Client, for example with InsecureSkipVerify transport.
 func (api *API) SetClient(c *http.Client) {
 	api.c = *c
+}
+
+// Allows one to set timeout.
+// The timeout includes connection time, any redirects, and reading the response body.
+// The timer remains running after Get, Head, Post, or Do return and will interrupt reading of the Response.Body.
+func (api *API) SetTimeout(timeout time.Duration) {
+	api.c.Timeout = timeout
 }
 
 func (api *API) printf(format string, v ...interface{}) {
